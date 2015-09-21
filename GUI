@@ -1,0 +1,179 @@
+import java.awt.*;
+import java.awt.event.*;
+import java.awt.geom.Point2D;
+import java.util.ArrayList;
+
+import javax.swing.*;
+
+public class GUI {
+
+	private JPanel p = new JPanel();
+	private JFrame f = new JFrame();
+
+	
+	GUI()
+	{
+		
+		
+	    p.setLayout(new FlowLayout());
+
+		f.addWindowListener(new WindowAdapter() {
+	         public void windowClosing(WindowEvent windowEvent){
+	            System.exit(0);
+	         }        
+	      }); 
+						       
+
+		// label 1
+		JLabel label = new JLabel("Enter number of players", JLabel.CENTER);
+		label.setLocation(100, 50);
+		f.add(label);
+		label.setSize(400, 400);
+		label.setFont (label.getFont ().deriveFont (20.0f));
+		
+		
+		//text 1
+		JTextField text = new JTextField(" ");
+		text.setLocation(250, 300);;	
+		f.add(text);
+		text.setSize(100, 30);
+		
+		
+		//Text should be number only
+		text.addKeyListener(new KeyAdapter(){
+			@Override
+			public void keyPressed(KeyEvent ev)
+			{
+				int key = ev.getKeyCode();
+				if(!(key < 53 && key > 49 ))
+					JOptionPane.showMessageDialog(f, "Enter a number: 2-4");
+					
+			}
+		});
+		
+		
+		//text 2
+		JTextField text2 = new JTextField(" ");
+		text2.setLocation(250, 300);;	
+		f.add(text2);
+		text2.setSize(100, 30);
+		
+		
+		//buttons
+		JButton b = new JButton("OK");
+		JButton b2 = new JButton();
+		
+		
+		f.add(b);  
+		b.setBounds(250,400,100, 40);
+		
+		//button 1 on click
+		b.addActionListener(new ActionListener()
+				{
+					public void actionPerformed(ActionEvent e)
+					{
+						text.setText(null);
+						b.removeNotify();
+						text.removeNotify();						
+						//b2.setText("OK");
+						label.setText("Enter name ");
+						text2.setText(null);
+						
+						b2.setText("OK");
+						f.add(b2);  
+						b2.setBounds(250,400,100, 40);
+						
+					}
+				});
+		
+		
+		//button 2 on click
+		b2.addActionListener(new ActionListener()
+				{
+					public void actionPerformed(ActionEvent e)
+					{
+						f.getContentPane().removeAll();						
+						f.getContentPane().revalidate();
+						f.getContentPane().repaint();
+						
+						GetPosition();
+					}
+
+				});
+		
+		
+		
+		
+		
+
+		f.getContentPane().setBackground(Color.GRAY);
+        f.setSize(700,700);			
+        f.setLayout(null);  
+    	f.setVisible(true);  
+
+		
+	}
+	
+	public void GetPosition()
+	{
+		
+		//label 2
+		JLabel label2 = new JLabel("Click on starting position", JLabel.CENTER);	
+		f.add(label2);
+		label2.setSize(300, 100);
+		label2.setFont (label2.getFont ().deriveFont (15.0f));
+	
+		
+		ArrayList<Point2D> PtList = new ArrayList<Point2D>();
+		
+		//Get mouse position
+		f.addMouseListener(new MouseListener() 
+		{
+			@Override
+			public void mouseClicked(MouseEvent e)
+			{
+				int x=e.getX();
+			    int y=e.getY();
+			    Point2D pt = new Point2D.Double(x, y);
+			    PtList.add(pt);
+			    System.out.println(x+","+y);
+				JOptionPane.showMessageDialog(f, "Position clicked: " +x+","+y);
+
+			}
+
+			@Override
+			public void mouseEntered(MouseEvent arg0) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void mouseExited(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void mousePressed(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void mouseReleased(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+		});
+		
+	}
+  
+		public static void main(String[] args) {  
+		  
+		          new GUI();
+		          		          		          
+	
+		}  
+			
+
+}
