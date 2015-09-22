@@ -13,6 +13,7 @@ public class Client {
 	
 	//Initialization of static values 
 	static ClientInterface callbackObj;
+	static ClientBoard cb;
 	static ServerInterface stub;
 
 	
@@ -73,10 +74,21 @@ public class Client {
 					   //initialize callback object
 					   callbackObj = new ClientImpl();
 					   
+					    cb = new ClientBoard();
+					   
+					    cb.drawBoard();
+					    
 					   //register for callback
 					   stub.registerForCallback(callbackObj);
+					   
+					   ClientBoard.board = stub.getClientBoard();
+					   cb.paintUpdate();
+					   
 					   System.out.println("Registered for callback.");
   
+					  
+					   
+					   
 				   	} // close try 
 				   catch (Exception e) {
 					   

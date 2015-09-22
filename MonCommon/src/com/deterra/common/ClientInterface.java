@@ -8,7 +8,7 @@ public interface ClientInterface
     public String notifyMe(String message) 
       throws java.rmi.RemoteException;
 
-    public byte[][] getBoardClient(byte[][] board)
+    public byte[][] printBoardClient(byte[][] board)
     	throws java.rmi.RemoteException;
     
 } // close interface

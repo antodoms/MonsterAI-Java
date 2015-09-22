@@ -78,13 +78,13 @@ public class ServerImpl extends UnicastRemoteObject implements ServerInterface {
             
            boardhandler = new BoardHandler(); 
            BoardHandler.SetBoard(clientList.size());
-           nextClient.getBoardClient(BoardHandler.ReturnBoard());
+           nextClient.printBoardClient(BoardHandler.ReturnBoard());
            }
            
            else
            {
         	 BoardHandler.SetBoard(clientList.size());
-        	   nextClient.getBoardClient(BoardHandler.ReturnBoard());
+        	   nextClient.printBoardClient(BoardHandler.ReturnBoard());
            }
        
     }// close for
@@ -95,6 +95,12 @@ public class ServerImpl extends UnicastRemoteObject implements ServerInterface {
                        "Server completed callbacks ---");
    
   } // close callbacks
+
+@Override
+public byte[][] getClientBoard() throws RemoteException {
+	
+	return BoardHandler.ReturnBoard();
+}
   
   
   /*

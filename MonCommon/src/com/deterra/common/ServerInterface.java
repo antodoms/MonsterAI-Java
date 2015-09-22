@@ -14,5 +14,6 @@ public interface ServerInterface extends Remote {
   public void unregisterForCallback(ClientInterface callbackClientObject)
     throws java.rmi.RemoteException;
   
-  
+  public byte[][] getClientBoard()
+		    throws java.rmi.RemoteException;
 }

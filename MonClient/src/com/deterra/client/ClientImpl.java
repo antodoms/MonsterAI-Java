@@ -23,18 +23,20 @@ public class ClientImpl extends UnicastRemoteObject implements ClientInterface {
    }
 
   //method prints to board values  
-   public byte[][] getBoardClient(byte[][] board) throws RemoteException{
+   public byte[][] printBoardClient(byte[][] serverboard) throws RemoteException{
 	  
 	   //loops though all board indices and prints value
 		for(int i = 0; i < 11 ;i++){
 			for(int j = 0; j < 11;j++){
-				 System.out.print(board[i][j]);
+				 System.out.print(serverboard[i][j]);
 			}
 			 System.out.println();
 		}
-			
-	  
-	  return board;
+		   
+		   ClientBoard.board = serverboard;
+		   Client.cb.paintUpdate();
+		
+	  return serverboard;
    }
 
 
