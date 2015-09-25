@@ -10,7 +10,6 @@ import com.deterra.common.ServerInterface;
 
 public class ServerImpl extends UnicastRemoteObject implements ServerInterface {
 
- 
 	private static final long serialVersionUID = 1L;
 	
 	//creates vector to store all clients
@@ -18,6 +17,8 @@ public class ServerImpl extends UnicastRemoteObject implements ServerInterface {
 
 	//creates board handler variable;
 	private BoardHandler boardhandler;
+	
+	private int maxPlayers;
 
 
    public ServerImpl() throws RemoteException {
@@ -26,6 +27,7 @@ public class ServerImpl extends UnicastRemoteObject implements ServerInterface {
       clientList = new Vector<ClientInterface>();
    }
 
+   
    //message method to check information passing
    public String sayHello( )   
 	  throws java.rmi.RemoteException {
@@ -42,11 +44,17 @@ public class ServerImpl extends UnicastRemoteObject implements ServerInterface {
       
       System.out.println("Registered new client ");
       
+      if(checkMaxPlayers()){
+    	  pickPos();
+      }
+      
       //runs a callback method 
       doCallbacks();
      } // close if
   }  
 
+  
+  
   //removes the client callback object from  vector otherwise returns fail message
   public synchronized void unregisterForCallback( ClientInterface callbackClientObject) 
     throws java.rmi.RemoteException{
@@ -54,13 +62,19 @@ public class ServerImpl extends UnicastRemoteObject implements ServerInterface {
 	//remove callback object condition
     if (clientList.removeElement(callbackClientObject)) {
     	System.out.println("Unregistered client ");
-    } else {
-    	
+    } else {	
        System.out.println(
          "Unregister Warning: client wasn't registered.");
     }
   } 
 
+  public synchronized void requestMove(ClientInterface callbackClientObject, int x , int y)
+  	throws  java.rmi.RemoteException{
+	   
+	  
+	  
+  }
+  
   
 //make a callback to each individual registered client in vector
   private synchronized void doCallbacks( ) throws java.rmi.RemoteException{
@@ -72,20 +86,15 @@ public class ServerImpl extends UnicastRemoteObject implements ServerInterface {
       
       // invokes callback to message client
         nextClient.notifyMe("Number of registered clients="+  clientList.size());
- 
+        nextClient.updateLobby("waiting on - " + (maxPlayers - clientList.size()) + " players");
         //board handler not declared, it is and board is passed to client
         if(boardhandler == null){
             
            boardhandler = new BoardHandler(); 
-           BoardHandler.SetBoard(clientList.size());
-           nextClient.printBoardClient(BoardHandler.ReturnBoard());
+           nextClient.getBoardServer(BoardHandler.ReturnBoard());
            }
            
-           else
-           {
-        	 BoardHandler.SetBoard(clientList.size());
-        	   nextClient.printBoardClient(BoardHandler.ReturnBoard());
-           }
+         
        
     }// close for
     
@@ -96,35 +105,61 @@ public class ServerImpl extends UnicastRemoteObject implements ServerInterface {
    
   } // close callbacks
 
+  
 @Override
 public byte[][] getClientBoard() throws RemoteException {
 	
 	return BoardHandler.ReturnBoard();
+	
+}
+
+public String setupGame(int players){
+	
+	maxPlayers = players;
+	if(clientList.size() < players ){
+		return("waiting on - " + (maxPlayers - clientList.size()) + " players");
+	}
+	return null;
+	
+}
+
+public boolean checkMaxPlayers(){
+	
+	if(clientList.size() < maxPlayers ){
+		return false;
+	}
+	return true;
+	
+}
+
+public synchronized void pickPos() throws java.rmi.RemoteException{
+	
+		 for (int i = 0; i < clientList.size(); i++){
+    	
+	      // converts vector back to callback object
+	      ClientInterface nextClient = (ClientInterface)clientList.elementAt(i);
+	      
+	      nextClient.startGame();
+	      
+   	      nextClient.getBoardServer(BoardHandler.ReturnBoard());
+	      
+	      System.out.println("cl = " + clientList.size());
+	    
+	    }// close for
+	    
 }
   
   
-  /*
   public synchronized void updatePush()  throws java.rmi.RemoteException{
 	  
 	    for (int i = 0; i < clientList.size(); i++){
 	    	
 	        ClientInterface nextClient = (ClientInterface)clientList.elementAt(i);
 	        
-	        if(boardhandler == null){
-	            
-	            boardhandler = new BoardHandler(); 
-	           BoardHandler.SetBoard(clientList.size());
-	           nextClient.getBoardClient(BoardHandler.ReturnBoard());
-	           }
-	           
-	           else
-	           {
-	        	 BoardHandler.SetBoard(clientList.size());
-	        	   nextClient.getBoardClient(BoardHandler.ReturnBoard());
-	           }
+	        nextClient.updateBoard(BoardHandler.ReturnBoard());
 	    }
 	  
 	}
-*/
+
   
 }// close CallbackServerImpl class   

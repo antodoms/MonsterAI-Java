@@ -1,7 +1,6 @@
 package com.deterra.server;
 import java.rmi.*;
 import java.rmi.registry.Registry;
-import java.rmi.server.UnicastRemoteObject;
 import java.rmi.registry.LocateRegistry;
 import java.io.*;
 
@@ -54,7 +53,7 @@ public class RMIServer  {
       
     } // close catch
   } // close main
-  
+
   
   //starts a RMI registry 
   private static void startRegistry(int RMIPortNum) throws RemoteException{
@@ -76,5 +75,6 @@ public class RMIServer  {
     }
     
   } // close startRegistry
+
 
 } // close class

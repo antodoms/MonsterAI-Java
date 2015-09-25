@@ -13,9 +13,14 @@ public class Client {
 	
 	//Initialization of static values 
 	static ClientInterface callbackObj;
-	static ClientBoard cb;
+	static Player playerClient;
 	static ServerInterface stub;
-
+	static GUIHandler ui;
+	
+	
+	public static boolean isHost = false;
+	public static int players = 2;
+	public static boolean gameRunning = false;
 	
   public static void main(String args[]) {
 	  
@@ -23,11 +28,24 @@ public class Client {
 	 boolean running = true;
 	 int input = 0;
 	
+	   javax.swing.SwingUtilities.invokeLater(new Runnable() {
+           public void run() {
+           	ui = new GUIHandler();
+           }
+       });
 	 
-
+	   
 	//Menu Loop
-	while(running == true){  
+	while(gameRunning == true){  
 		
+	System.out.println("game running");
+	
+	if (playerClient == null){
+		playerClient = new Player("steve", 1,1,"1");
+		System.out.println("player made");
+	}
+		
+	/*
 		 //Print menu
 		 System.out.println("          MENU          ");
 		 System.out.println("------------------------");
@@ -45,6 +63,8 @@ public class Client {
 			case 1: 
 	  
 				   try {
+					   
+					
     	
 					   //Initialize readers for string input
 					   InputStreamReader is = new InputStreamReader(System.in);
@@ -54,6 +74,8 @@ public class Client {
 					   System.out.println("Enter the RMIRegistry host name:");
 					   String hostName = br.readLine();
       
+					  
+					   
 					   //Prompt and get of server port number default 1099
 					   System.out.println("Enter the RMIregistry port number:");
 					   String portNum = br.readLine();
@@ -74,15 +96,14 @@ public class Client {
 					   //initialize callback object
 					   callbackObj = new ClientImpl();
 					   
-					    cb = new ClientBoard();
-					   
-					    cb.drawBoard();
+					   // cb = new ClientBoard();
+					 //  cb.drawBoard();
 					    
 					   //register for callback
 					   stub.registerForCallback(callbackObj);
 					   
 					   ClientBoard.board = stub.getClientBoard();
-					   cb.paintUpdate();
+					 //  cb.paintUpdate();
 					   
 					   System.out.println("Registered for callback.");
   
@@ -117,10 +138,68 @@ public class Client {
 		default:
 		
 		}// close switch
+		*/
 	 }// close while loop
  } //close main
   
+  public static void game(){
+	  while(gameRunning == true){  
+			
+			//System.out.println("game running");
+			
+			if (playerClient == null){
+				playerClient = new Player("steve", 1,1,"1");
+				System.out.println("player made");
+			}
+			
+			
+	  }
+  }
   
+  public static void serverConnect(String portNum, String hostName){
+	  
+	 try{
+	  int RMIPort = Integer.parseInt(portNum);
+	   
+	  //defines address for stub for remote object
+	   String registryURL = "rmi://"+ hostName + ":" + RMIPort + "/callback";  
+	   
+	   // find the remote object and cast it to an interface object
+	   stub = (ServerInterface)Naming.lookup(registryURL);
+	   
+	   // print remote object lookup completion, hello test handshake
+	   System.out.println("Lookup completed " );
+	   System.out.println("Server said " + stub.sayHello());
+	 
+	   //initialize callback object
+	   callbackObj = new ClientImpl();
+	   
+	 
+	   if(isHost == true){
+	   System.out.println(stub.setupGame(players));
+	   }
+	   
+	   //register for callback
+	   stub.registerForCallback(callbackObj);
+	   
+	   
+	   ClientBoard.board = stub.getClientBoard();
+	
+	   System.out.println("Registered for callback.");
+
+	  
+	   ui.refresh();
+	   
+   	} // close try 
+   catch (Exception e) {
+	   
+	  
+	   System.out.println("Exception in CallbackClient: " + e);
+
+
+} // close catch
+
+  }
   
   //Utilities for gathering integer input
   

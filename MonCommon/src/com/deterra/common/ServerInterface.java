@@ -16,4 +16,11 @@ public interface ServerInterface extends Remote {
   
   public byte[][] getClientBoard()
 		    throws java.rmi.RemoteException;
+
+  public String setupGame(int players)
+		throws java.rmi.RemoteException;
+
+
+  public void requestMove(ClientInterface callbackObj, int x, int y)
+		throws java.rmi.RemoteException;
 }

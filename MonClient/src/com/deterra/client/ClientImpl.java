@@ -34,10 +34,36 @@ public class ClientImpl extends UnicastRemoteObject implements ClientInterface {
 		}
 		   
 		   ClientBoard.board = serverboard;
-		   Client.cb.paintUpdate();
+		   Client.ui.refresh();
 		
 	  return serverboard;
    }
+   
+   public void getBoardServer(byte[][] serverboard) throws RemoteException{
+		  
+	 
+	   System.out.println("Board Updated");
+	   ClientBoard.board = serverboard;
+	   Client.ui.refresh();
+		
+   }
+   
+   public void startGame() {	   
+	   GUIHandler.swap("BOARD");
+	   Client.gameRunning = true;
+	   Client.game();
+	   Client.ui.refresh();
+   }
+   
+   public void updateLobby(String Message) {
+	   ClientLobby.updateMsg(Message);
+	   Client.ui.refresh();
+   }
 
+
+   public void updateBoard(byte[][] serverboard) throws RemoteException{	   
+	   ClientBoard.board = serverboard;
+	   Client.ui.refresh();
+   }
 
 }// close CallbackClientImpl 

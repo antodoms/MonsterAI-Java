@@ -5,22 +5,30 @@ import java.awt.*;
 
 /**
  * Created by Pavel Nikolaev on 27/08/2015.
+ * Modified by Daniel Bugeja on 21/09/2015.
  */
-public class ClientBoard extends JFrame {
 
-   static byte[][] board = new byte[11][11];
 
-    public void drawBoard(){
-        setTitle("Multiplayer Game");
-        setSize(975,975);
-        setVisible(true);
-        setDefaultCloseOperation(EXIT_ON_CLOSE);
-    }
+public class ClientBoard extends JPanel {
 
-    public void paintUpdate(){
-    	repaint();
-    }
-    
+   /**
+	 * 
+	 */
+private static final long serialVersionUID = 1L;
+	
+static byte[][] board = new byte[11][11];
+   private int startPos = 50;
+   private int sqrSize = 50;
+   
+   
+   public ClientBoard(LayoutManager layout){
+	   
+	super(layout);
+	
+	initialiseBoard();
+	
+   }
+
     
     public void initialiseBoard(){
 
@@ -38,13 +46,13 @@ public class ClientBoard extends JFrame {
         }
     }
 
-@Override
-    public void paint(Graphics g) {
+    @Override
+    protected void paintComponent(Graphics g) {
 
-        super.paint(g);
+        super.paintComponent(g);
 
-    int x=50;
-    int y=50;
+    int x= startPos;
+    int y= startPos;
 
 
         for(int i=0;i<11;i++){
@@ -52,23 +60,24 @@ public class ClientBoard extends JFrame {
 
                 if(board[i][j]==1){
                     g.setColor(Color.darkGray);
-                    g.fill3DRect(x,y,80,80,true);
-                    x+=80;
+                    g.fill3DRect(x,y,sqrSize,sqrSize,true);
+                    x+=sqrSize;
                 }
 
                 else{
                     g.setColor(Color.lightGray);
-                    g.fill3DRect(x,y,80,80,true);
-                    x+=80;
+                    g.fill3DRect(x,y,sqrSize,sqrSize,true);
+                    x+=sqrSize;
                 }
 
                if(j==10){
-                   y+=80;
-                   x=50;
+                   y+=sqrSize;
+                   x= startPos;
 
                 }
             }
     }
+        /*
         for(int i=50;i<=930;i+=80) {
             g.drawLine(i,50,i,930);
         }
@@ -76,7 +85,7 @@ public class ClientBoard extends JFrame {
         for(int j=50;j<=930;j+=80){
             g.drawLine(50,j,930,j);
         }
-
+	*/
     }
 
 
