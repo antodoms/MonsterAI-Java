@@ -7,6 +7,8 @@ public class Board {
     int distanceFromOrigin = 0;
     int x,y,z;
     public List<Board> neighbors = new ArrayList<>();
+    public int pathCost;
+	public Board parent;
 
     public Board(){
     	this.x = 0;

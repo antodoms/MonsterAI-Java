@@ -1,5 +1,11 @@
 import java.util.List;
+import java.util.PriorityQueue;
+import java.util.Set;
+import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashSet;
 import java.util.Stack;
 
 
@@ -13,7 +19,7 @@ class MonsterAI {
 								 {1,0,0,0,1,0,0,0,1},
 								 {1,0,0,0,1,0,0,0,1},
 								 {1,0,0,0,4,0,0,0,1},
-								 {2,1,1,1,1,1,1,1,3},
+								 {1,1,1,1,1,1,2,1,3},
 								 {1,0,0,0,1,0,0,0,1},
 								 {1,0,0,0,1,0,0,0,1},
 								 {1,0,0,0,1,0,0,0,1},
@@ -153,6 +159,81 @@ class MonsterAI {
         return shortest;
 	}
 
+	public List<Board> findpathucs(Board start, Board end){
+		
+		// Uniform Cost Search (UCS) path code. Use this for difficult level
+		// monster path code.
+		//
+		// This code displays the path as arraylist from Start (ie, monster location)
+		// to shortest distance player location.
+		
+	    List<Board> finallist = new ArrayList<Board>();
+	    PriorityQueue<Board> fringe = new PriorityQueue<Board>(20, 
+	            new Comparator<Board>(){
+            public int compare(Board i, Board j){
+                if(i.pathCost > j.pathCost){
+                    return 1;
+                }
+                else if (i.pathCost < j.pathCost){
+                    return -1;
+                }
+                else{
+                    return 0;
+                }
+            }
+        }
+
+    );
+
+	    Board temp = new Board();
+	    
+	    start = getcharacter(start);
+	    end = getcharacter(end);
+	    temp = start;
+	    fringe.offer(temp);
+	    
+	    fringe.offer(temp);
+        Set<Board> explored = new HashSet<Board>();
+        boolean found = false;
+
+        do{
+
+            temp = fringe.poll();
+            temp = getcharacter(temp);
+            //temp.setfunc(temp.node,temp.node.neighbors);
+            explored.add(temp);
+
+            if(temp == end){
+                found = true;
+            }
+
+            for(Board ab: temp.neighbors){
+            	ab = getcharacter(ab);
+                ab.pathCost = temp.pathCost +1;
+                if(!explored.contains(ab) && !fringe.contains(ab)){
+                    ab.parent = temp;
+                    fringe.add(ab);
+                }
+                else if((fringe.contains(ab))&&(ab.pathCost>temp.pathCost)){
+                    ab.parent=temp;
+                    fringe.remove(ab);
+                    fringe.add(ab);
+                }
+
+
+            }
+        }while(!fringe.isEmpty());
+        
+        for(Board node = getcharacter(end); node!=null; node = node.parent){
+        	node = getcharacter(node);
+            finallist.add(node);
+        }
+
+        Collections.reverse(finallist);
+
+        return finallist;
+
+	}// end method
 	
 	
 	public List<Board> findpathdfs(Board start, Board end){
@@ -220,6 +301,9 @@ class MonsterAI {
 		
 		finallist = total.get(0);
 		for (List<Board> ab: total){
+			
+			displaypath(ab);
+			System.out.println("\n\n\n\n");
 			if(ab.size() < finallist.size()){
 				finallist = ab;
 				System.out.println("size = = = " + ab.size());
@@ -229,17 +313,24 @@ class MonsterAI {
 	}
 	
 	
-	public void nextpath(Board start, Board end){
+	public byte[] nextpath(List<Board> path){
 		// Still need to be implemented , this is supposed to send the next possible location 
 		// of monster instead of sending the whole path.
-		int distancex = start.x-end.x;
-		int distancey = start.y-end.y;
 		
-		Board temp = start;
-		List<Board> nodesCopy = new ArrayList<>();
+		byte[] nextcoordinate= {0,0};
+		int i=0;
+		for( Board cd : path){
+			
+			if(i==1){
+        	//System.out.println(cd.x + " " + cd.y + " ");
+        	nextcoordinate[0]=(byte) cd.x;
+        	nextcoordinate[1]=(byte) cd.y;
+			}
+        	i++;
+        	
+        }
 		
-		
-		
+		return nextcoordinate;
 		
 	}
 
@@ -250,33 +341,49 @@ class MonsterAI {
 	        	
 	        }
 		}
+		
+		
+		public byte[] runmonster(byte[][] randomboard){
+			List<Board> finalpath = new ArrayList<>();
+			this.changeboard(randomboard);
+			this.drawGraph();
+			Board shortest = this.searchnearest();
+			finalpath=this.findpathucs(this.monster, shortest);
+			 System.out.println("start : " + this.monster.x + " " + this.monster.y + "  stop : " + shortest.x + " " + shortest.y);
+	         this.displaypath(finalpath);
+			 return this.nextpath(finalpath);
+	         
+	         
+		} 
 	    
 	    public static void main(String[] args){
 	    	
 	    	// This is how you have to call the class functions in its order in the server
 	    	// side to receive the path of monster.
 	    	List<Board> finalpath = new ArrayList<>();
-	    	byte[][] randomboard = {{1,1,1,3,1,1,1,1,1},
+	    	byte[][] randomboard = {{1,1,1,1,1,1,1,1,3},
+									{5,0,0,0,1,0,0,0,1},
 									{1,0,0,0,1,0,0,0,1},
 									{1,0,0,0,1,0,0,0,1},
+									{1,1,1,1,1,1,1,1,1},
 									{1,0,0,0,1,0,0,0,1},
-									{1,1,2,1,1,1,1,1,1},
+									{1,0,0,0,4,0,0,0,1},
 									{1,0,0,0,1,0,0,0,1},
-									{4,0,0,0,1,0,0,0,1},
-									{1,0,0,0,1,0,0,0,1},
-									{1,1,1,1,1,1,1,1,1}};
+									{2,1,1,1,1,1,1,1,1}};
 	    	
 	        MonsterAI ab = new MonsterAI();
-	        ab.changeboard(randomboard);
-	        ab.drawGraph();
-	        Board shortest = ab.searchnearest();
+	        byte[] nextcoordinate= ab.runmonster(randomboard);
+	       // ab.changeboard(randomboard);
+	       // ab.drawGraph();
+	       // Board shortest = ab.searchnearest();
 	        //System.out.println(ab.monster + " 123 " + shortest);
 	        
-	        finalpath=ab.findpathdfs(ab.monster, shortest);
+	       // finalpath=ab.findpathdfs(ab.monster, shortest);
 	        
 	        // uncomment below lines to display the final path 
-	         System.out.println("start : " + ab.monster.x + " " + ab.monster.y + "  stop : " + shortest.x + " " + shortest.y);
-	         ab.displaypath(finalpath);
+	          // ab.displaypath(finalpath);
+	       //  ab.nextpath(finalpath);
 	        
+	      //  System.out.println("(" + nextcoordinate[0] + " " + nextcoordinate[1] + ")");
 	    }
 	}
