@@ -1,7 +1,5 @@
 package com.deterra.client;
 
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 import java.rmi.RemoteException;
 
 
@@ -11,79 +9,53 @@ import java.rmi.RemoteException;
  * Created by Daniel Bugeja on 25/09/2015.
  */
 
-public class Player implements KeyListener {
+public class Player  {
 
-	private String name;
+	private static String name;
 	private String idNum;
-	private int posX;
-	private int posY;
+	public static int posX;
+	private static int posY;
+	public static boolean isAlive;
 	
-	public Player(String name, int posX, int posY, String idNum){
-		
+	
+	public Player(String name, String idNum){	
 		this.name = name;
-		this.posX = posX;
-		this.posY = posY;
 		this.idNum = idNum;
-		
+		this.isAlive = true;
 	}
 	
-	public void setPostion(int x , int y){
+	public static void setPosition(int x , int y){
 		
 		posX = x;
 		posY = y;
 		
 	}
 	
-	public void move(int x , int y) throws RemoteException{
-		
-		Client.stub.requestMove(Client.callbackObj, x ,y);	
-		
+	public static String getName(){
+	
+		return name;
 	}
 	
-	public void checkInput(){
+	public static void move(int x , int y) throws RemoteException{
 		
-		
-		
-	}
-
-	@Override
-	public void keyTyped(KeyEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void keyPressed(KeyEvent e) {
-		
-		try{
-		        if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
-		           //move(posX+1,posY);
-		           System.out.println("key pressed");
-		        }
-		        
-		        if (e.getKeyCode() == KeyEvent.VK_LEFT) {
-			          // move(posX-1,posY);
-			        }
-		        
-		        if (e.getKeyCode() == KeyEvent.VK_UP) {
-			           //move(posX,posY+1);
-			        }
-		        
-		        if (e.getKeyCode() == KeyEvent.VK_DOWN) {
-			          // move(posX,posY-1);
-			        }
-		}catch(Exception e1){
+		if(isAlive == true){
 			
+		System.out.println((posX + x) + " , " + (posY  + y) );	
+		if(Client.stub.requestMove(Client.callbackObj, (posX + x ),(posY + y),posX,posY)){
+			posX += x;
+			posY += y;
 		}
-
+	}
+	}
+	
+	public static void kill() throws RemoteException{
 		
+		if(isAlive == true){
+		Client.stub.killPlayer(Client.callbackObj,posX,posY);
+		}
+		isAlive = false;
 	}
 
-	@Override
-	public void keyReleased(KeyEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
 	
 }
 	

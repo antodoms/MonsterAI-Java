@@ -26,6 +26,8 @@ public class BoardHandler {
 	                }
 	            }
 	        }
+	        
+	        serverBoard[10][5]=2;
 	    }
 	
 	//sets board to passed in value for testing reasons
@@ -39,6 +41,10 @@ public class BoardHandler {
 			}
 		}
 		return serverBoard;
+	}
+	
+	public static byte getBoardValue(int x, int y){
+		return 	serverBoard[x][y];
 	}
 	
 	

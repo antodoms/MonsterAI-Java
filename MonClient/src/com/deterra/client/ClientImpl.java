@@ -8,62 +8,50 @@ import com.deterra.common.ClientInterface;
 
 public class ClientImpl extends UnicastRemoteObject implements ClientInterface {
   
-	
 	private static final long serialVersionUID = 1L;
 
 	public ClientImpl() throws RemoteException {
       super( );
     }
 
-	//message method to check callback
+	
+	//message method to check callbacks and print msg to client
    public String notifyMe(String message){
+	   
       String returnMessage = "Call back received: " + message;
       System.out.println(returnMessage);
+      
       return returnMessage;
    }
 
-  //method prints to board values  
-   public byte[][] printBoardClient(byte[][] serverboard) throws RemoteException{
-	  
-	   //loops though all board indices and prints value
-		for(int i = 0; i < 11 ;i++){
-			for(int j = 0; j < 11;j++){
-				 System.out.print(serverboard[i][j]);
-			}
-			 System.out.println();
-		}
-		   
-		   ClientBoard.board = serverboard;
-		   Client.ui.refresh();
-		
-	  return serverboard;
-   }
    
-   public void getBoardServer(byte[][] serverboard) throws RemoteException{
-		  
-	 
-	   System.out.println("Board Updated");
-	   ClientBoard.board = serverboard;
-	   Client.ui.refresh();
-		
-   }
-   
+   //sets the gui to the board and sets and runs game startup code
    public void startGame() {	   
 	   GUIHandler.swap("BOARD");
+	   ClientBoard.focus();
 	   Client.gameRunning = true;
 	   Client.game();
 	   Client.ui.refresh();
    }
    
-   public void updateLobby(String Message) {
-	   ClientLobby.updateMsg(Message);
+   //updates the msg on the lobby gui screen
+   public void updateLobby(String Message, String[] playerList) {
+	   ClientLobby.updateMsg(Message,playerList);
 	   Client.ui.refresh();
    }
 
-
+   //updates the board and synchs with servers board
    public void updateBoard(byte[][] serverboard) throws RemoteException{	   
 	   ClientBoard.board = serverboard;
 	   Client.ui.refresh();
    }
+
+   //sets the position variables in the player class
+   public void setPlayerPos(int i, int j) throws RemoteException {
+	
+	   Player.setPosition(i, j);
+	
+   }
+
 
 }// close CallbackClientImpl 

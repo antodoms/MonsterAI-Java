@@ -20,6 +20,7 @@ package com.deterra.client;
 		
 		private String port = "1099";
 		private String host;
+		private String playerName;
 		
 		GUI(LayoutManager layout)
 		{		       
@@ -35,22 +36,24 @@ package com.deterra.client;
 			
 			
 			//buttons
-			final JButton b = new JButton("OK");
+			final JButton b = new JButton("Enter");
 			final JButton b2 = new JButton();
 			final JButton b3 = new JButton();
 			
 			
 			//text 1
-			text = new JTextField(1);
-			setField(text);
+		
 
 		
 			if(Client.isHost == true){
+				
+				text = new JTextField(1);
+				setField(text);
+				setButton(b,"OK");
 			
-			setButton(b,"OK");
-			
-			//Text should be number only
-			text.addKeyListener(new KeyAdapter(){
+				//Text should be number only
+				text.addKeyListener(new KeyAdapter(){
+					
 				@Override
 				public void keyPressed(KeyEvent ev)
 				{
@@ -68,10 +71,8 @@ package com.deterra.client;
 			
 			}else{
 				
-				clearAll(text,b);
-				
+				//clearAll(text,b);
 				label.setText("Enter name ");
-				
 				setButton(b2,"OK");
 			
 			}
@@ -108,9 +109,7 @@ package com.deterra.client;
 							Client.players = val;
 							
 							clearAll(text,b);
-							
 							label.setText("Enter name ");
-							
 							setButton(b2,"OK");
 							
 							}else{
@@ -136,8 +135,8 @@ package com.deterra.client;
 				
 						public void actionPerformed(ActionEvent e)
 						{
-							
-							
+							playerName = text2.getText();
+							   
 							text2.setText(null);
 							b2.removeNotify();
 							text2.removeNotify();
@@ -170,7 +169,9 @@ package com.deterra.client;
 							host = hosttext.getText();
 							GUIHandler.swap("LOBBY");
 							
-							Client.serverConnect(port,host);
+							
+							
+							Client.serverConnect(port,host,playerName);
 							
 								
 						

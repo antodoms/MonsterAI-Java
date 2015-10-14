@@ -8,7 +8,7 @@ import java.io.*;
 
 public class RMIServer  {
 	
-  public static void main(String args[]) {
+  public RMIServer() {
 	
 	//Initialize readers for string input
     InputStreamReader is = new InputStreamReader(System.in);
@@ -21,21 +21,21 @@ public class RMIServer  {
     try{  
     	
       //Prompt and get of server port number default 1099
-      System.out.println("Enter the port number:");
-      portNum = (br.readLine()).trim();
+      //System.out.println("Enter the port number:");
+      //portNum = (br.readLine()).trim();
       
       //parse port string to int
-      int RMIPortNum = Integer.parseInt(portNum);
+      //int RMIPortNum = Integer.parseInt(portNum);
       
  
       //creates registry on selected port
-      startRegistry(RMIPortNum); 
+      startRegistry(1099); 
       
       //creates remote object to be bound
       ServerImpl exportedObj = new ServerImpl();
  
       //sets registry address
-      registryURL =  "rmi://127.0.0.1:" + RMIPortNum + "/callback";
+      registryURL =  "rmi://127.0.0.1:" + 1099 + "/callback";
       
       //binds the remote object to registry
       Naming.rebind(registryURL, exportedObj);
