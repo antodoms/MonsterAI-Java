@@ -8,6 +8,8 @@ public class Searchnode {
 
 	public Board node;
 	public List<Board> arraylist = new ArrayList<>();
+	public int pathCost;
+	public Searchnode parent;
 	
 	public void setfunc(Board a, List<Board> arraylist2){
 		this.node = a;
