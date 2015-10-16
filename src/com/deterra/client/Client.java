@@ -5,8 +5,8 @@ import java.rmi.Naming;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
-import com.deterra.common.ClientInterface;
-import com.deterra.common.ServerInterface;
+import common.ClientInterface;
+import common.ServerInterface;
 import com.deterra.server.RMIServer;
 
 

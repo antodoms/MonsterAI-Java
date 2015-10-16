@@ -6,10 +6,13 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.Vector;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
-import com.deterra.common.ClientInterface;
-import com.deterra.common.ServerInterface;
-import com.deterra.common.Utilities;
+import common.ClientInterface;
+import common.ServerInterface;
+import common.Utilities;
 
 import AI.AIBoard;
 import AI.MonsterAI;
@@ -248,44 +251,18 @@ public synchronized void setupGame() throws java.rmi.RemoteException{
 	      
     	nextClient.startGame();      
     	nextClient.updateBoard(BoardHandler.ReturnBoard());
-	    
+    	
+    	
 	}// close for
-    
-    AISetup();
-}
-
-    public  void AISetup(){
-    	
-    	// This is how you have to call the class functions in its order in the server
-    	// side to receive the path of monster.
-    	List<AIBoard> finalpath = new ArrayList<>();
-    //[][] randomboard = BoardHandler.ReturnBoard();
-    	
-        AI.MonsterAI ab = new MonsterAI();
-        
-        AIBoard shortest;
-        int[] aiMove = new int[4]; 
-        
-        for(int i = 0; i < 3; i++){
-        	
-        ab.changeboard(BoardHandler.ReturnBoard());
-        
-        ab.drawGraph();
-        
-        shortest = ab.searchnearest();
-        
-        System.out.println(ab.monster + " 123 " + shortest);
-        
-        finalpath=ab.findpathdfs(ab.monster, shortest);
-        
-        // uncomment below lines to display the final path 
-         //System.out.println("start : " + ab.monster.x + " " + ab.monster.y + "  stop : " + shortest.x + " " + shortest.y);
-         //ab.displaypath(finalpath);
+     
+    Runnable helloRunnable = new Runnable() {
+    	int[] aiMove = new int[4];
+        public void run() {
+        	AI.MonsterAI ab = new MonsterAI();
+       	 aiMove = ab.runmonster(BoardHandler.ReturnBoard());
+         //aiMove = ab.displaypoint(finalpath,n);
          
-         for(int n = 0; n < 4; n++){
-        
-         aiMove = ab.displaypoint(finalpath,n);
-         
+       	 System.out.println(aiMove[0]+"  " +aiMove[1] + " "+ aiMove[2] +  " " + aiMove[3]);
          BoardHandler.SetSingleBoard(aiMove[0],aiMove[1],1);
          BoardHandler.SetSingleBoard(aiMove[2],aiMove[3],2);
          
@@ -296,9 +273,13 @@ public synchronized void setupGame() throws java.rmi.RemoteException{
 			e.printStackTrace();
 		}
         }
-        }
-        
-    }
+    };
+
+    ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
+    executor.scheduleAtFixedRate(helloRunnable, 0, 1, TimeUnit.SECONDS);
+  
+}
+
 	    
 
   

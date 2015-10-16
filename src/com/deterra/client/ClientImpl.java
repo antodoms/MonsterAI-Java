@@ -3,7 +3,7 @@ package com.deterra.client;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 
-import com.deterra.common.ClientInterface;
+import common.ClientInterface;
 
 
 public class ClientImpl extends UnicastRemoteObject implements ClientInterface {

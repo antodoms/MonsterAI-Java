@@ -6,17 +6,16 @@ public class AIBoard {
 	
 	boolean showMoreInfo = true;
     int distanceFromOrigin = 0;
-    public int x;
-	public int y;
-	int z;
+    int x,y,z;
     public List<AIBoard> neighbors = new ArrayList<>();
+    public int pathCost;
+	public AIBoard parent;
 
     public AIBoard(){
     	this.x = 0;
 		this.y = 0;
 		this.z = 0;
     }
-    
 	public void setBoard(int x, int y, int z) {
 		// setting the location (x,y) of the object z is the type of object like 
 		// if z=1 then its available , if z=2 then thats monster , likewise

@@ -1,4 +1,4 @@
-package com.deterra.common;
+package common;
 
 import java.rmi.*;
 

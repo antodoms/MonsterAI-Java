@@ -1,4 +1,4 @@
-package com.deterra.common;
+package common;
 
 /**
  * Created by Pavel Nikolaev on 27/09/2015.

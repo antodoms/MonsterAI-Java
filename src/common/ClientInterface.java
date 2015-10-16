@@ -1,4 +1,4 @@
-package com.deterra.common;
+package common;
 
 public interface ClientInterface 
   extends java.rmi.Remote{
